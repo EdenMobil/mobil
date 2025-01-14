@@ -7,7 +7,7 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
-from functions.line_follower import LineFollower
+from functions.line_followerv2 import LineFollower
 import uasyncio as asyncio
 
 ev3 = EV3Brick()
@@ -25,5 +25,5 @@ Drive = DriveBase(right_motor, left_motor, wheel_diameter=56, axle_track=152)
 # Write your program here.
 ev3.speaker.beep()
 
-linefollower = LineFollower(Drive, color_sensor, gyro_sensor, ev3)
-linefollower.on_line()
+gyna = LineFollower([], Drive, color_sensor, gyro_sensor, ev3)
+gyna.on_line()
