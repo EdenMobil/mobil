@@ -8,7 +8,6 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
 from functions.line_followerv2 import LineFollower
-import uasyncio as asyncio
 
 ev3 = EV3Brick()
 
