@@ -11,7 +11,7 @@ class LineFollower:
 
         self.event_counter = 0
         self.follow_color = [Color.YELLOW, Color.WHITE]
-        self.crossing_color = COLOR.BLUE
+        self.crossing_color = Color.BLUE
         self.follow_angle = 0
         self.forward = 100
         self.retry_value = 0
@@ -31,7 +31,7 @@ class LineFollower:
                 self.retry_value = 0
             if color == self.crossing_color:
                 if self.confirm_color(color):
-                    print("Found Crossing")
+                    self.crossing()
             else:
                 self.ev3.speaker.beep()
                 self.correct_direction(angle)
@@ -64,3 +64,11 @@ class LineFollower:
     
     def event(self):
         self.event_counter += 1
+
+    def crossing(self):
+        while self.color_sensor == self.crossing_color:
+            self.drivebase.straight(10)
+        else:
+            if self.color_sensor.color() in self.follow_color:
+                self.drivebase.stop()
+                print("Crossing")
