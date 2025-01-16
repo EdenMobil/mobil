@@ -29,7 +29,7 @@ class LineFollower:
                 self.ev3.screen.load_image(ImageFile.FORWARD)
                 self.drivebase.straight(self.forward)
                 self.retry_value = 0
-            if color == crossing_color:
+            if color == self.crossing_color:
                 if self.confirm_color(color):
                     print("Found Crossing")
             else:
@@ -57,7 +57,7 @@ class LineFollower:
     def confirm_color(self, color):
         self.drivebase.turn(2)
         self.drivebase.turn(-2)
-        if self.color_sensor.color() = color:
+        if self.color_sensor.color() == color:
             return True
         else:
             return False
