@@ -13,8 +13,9 @@ class LineFollower:
         self.follow_color = [Color.YELLOW, Color.WHITE]
         self.crossing_color = Color.BLUE
         self.follow_angle = 0
-        self.forward = 100
+        self.forward = 150
         self.retry_value = 0
+        self.retry_turn = 15
 
         self.gyro_sensor.reset_angle(0)
         
@@ -37,26 +38,26 @@ class LineFollower:
                 self.correct_direction(angle)
                 
     def correct_direction(self, angle):
-        """
-        Adjusts the direction based on the current angle from the gyro sensor.
-
-        :param angle: Current angle from the gyro sensor in degrees.
-        """
         self.ev3.screen.load_image(ImageFile.QUESTION_MARK)
         if angle >= 2:
             self.drivebase.turn(-angle)
         elif angle == 0:
-            if self.retry_value < 5:
-                self.drivebase.turn(5)
+            print("Angle is 0 retry:", self.retry_value)
+            if self.retry_value < 2:
+                self.drivebase.turn(-10)
+                self.retry_value += 1
+            elif self.retry_value < 4:
+                self.drivebase.turn(-15)
                 self.retry_value += 1
             else:
-                self.drivebase.turn(10)
+                self.retry_turn += 5
+                self.drivebase.turn(-self.retry_turn)
         elif angle <= 2:
             self.drivebase.turn(abs(angle))
 
     def confirm_color(self, color):
-        self.drivebase.turn(2)
-        self.drivebase.turn(-2)
+        self.drivebase.turn(5)
+        self.drivebase.turn(-5)
         if self.color_sensor.color() == color:
             return True
         else:
