@@ -19,7 +19,7 @@ class LineFollower:
         self.gyro_sensor.reset_angle(0)
         
     def on_line(self):
-        print("Forward")
+        print("Vorwärts")
         while True:
             angle = self.gyro_sensor.angle()
             color = self.color_sensor.color()
