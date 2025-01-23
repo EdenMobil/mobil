@@ -1,7 +1,9 @@
 
 # Edenmobil - mobil
 
-> A delivery robot that can deliver to multiple rooms built with ev3dev
+Wir erstellen einen Roboter, der im Keller der Schule von einem Raum (MAKERSPACE) zu anderen Kunsträumen fahren kann. 
+Als Betriebssystem des EV3 wird ev3dev verwendet. Der Programmcode ist in MicroPython.
+
 
 
 ## Testing
