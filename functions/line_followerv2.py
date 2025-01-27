@@ -21,7 +21,7 @@ class LineFollower:
 
         self.gyro_sensor.reset_angle(0)
         
-    def on_line(self):
+    def AufLinie(self):
         print("Vorwärts")
         while True:
             angle = self.gyro_sensor.angle()
@@ -39,10 +39,10 @@ class LineFollower:
                 self.ev3.speaker.beep()
                 self.correct_direction(angle)
                 
-    def correct_direction(self, angle):
+    def RichtungKorrektur(self, angle):
         # Korrigiert die Bewegung unter Berücksichtigung
         # des aktuellen Winkels
-        
+
         self.ev3.screen.load_image(ImageFile.QUESTION_MARK)
         if angle >= 2:
             self.drivebase.turn(-angle)

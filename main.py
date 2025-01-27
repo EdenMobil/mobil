@@ -18,18 +18,22 @@ ev3 = EV3Brick()
 
 
 # Sensors
-color_sensor = ColorSensor(Port.S3)
-gyro_sensor = GyroSensor(Port.S2)
+Farbsensor = ColorSensor(Port.S3)
+Gyrosensor = GyroSensor(Port.S2)
 
 # Motors
-right_motor = Motor(Port.B)
-left_motor = Motor(Port.C)
+MotorRechts = Motor(Port.B)
+MotorLinks = Motor(Port.C)
 
-Drive = DriveBase(right_motor, left_motor, wheel_diameter=56, axle_track=152)
+Fahrgestell = DriveBase(MotorRechts, MotorLinks, wheel_diameter=56, axle_track=152)
+
+
 
 # Hauptprogramm
 
 ev3.speaker.beep()
 
-gyna = LineFollower([], Drive, color_sensor, gyro_sensor, ev3)
-gyna.on_line()
+
+
+gyna = LineFollower([], Fahrgestell, Farbsensor, Gyrosensor, ev3)
+gyna.AufLinie()
