@@ -1,3 +1,6 @@
+# Linienfolger mit Unterstützung des
+# Gyro-Sensors
+
 from pybricks.parameters import Color
 from pybricks.media.ev3dev import ImageFile, Image
 
@@ -19,7 +22,7 @@ class LineFollower:
         self.gyro_sensor.reset_angle(0)
         
     def on_line(self):
-        print("Forward")
+        print("Vorwärts")
         while True:
             angle = self.gyro_sensor.angle()
             color = self.color_sensor.color()
@@ -37,11 +40,9 @@ class LineFollower:
                 self.correct_direction(angle)
                 
     def correct_direction(self, angle):
-        """
-        Adjusts the direction based on the current angle from the gyro sensor.
-
-        :param angle: Current angle from the gyro sensor in degrees.
-        """
+        # Korrigiert die Bewegung unter Berücksichtigung
+        # des aktuellen Winkels
+        
         self.ev3.screen.load_image(ImageFile.QUESTION_MARK)
         if angle >= 2:
             self.drivebase.turn(-angle)
