@@ -34,6 +34,14 @@ Fahrgestell = DriveBase(MotorRechts, MotorLinks, wheel_diameter=56, axle_track=1
 ev3.speaker.beep()
 
 
+# Im Hauptprogramm sollte eingebaut werden, dass man entscheiden kann,
+# wohin der Roboter fährt
 
-gyna = LineFollower([], Fahrgestell, Farbsensor, Gyrosensor, ev3)
-gyna.AufLinie()
+ while True:
+    raumwahl = int(input('In welchen Raum soll der Roboter ?\n
+    Werkraum      (1)\n
+    Kunstraum U07 (2)\n
+    Kunstraum U06 (3)\n'))
+    if raumwahl == 1:
+        gyna = LineFollower([], Fahrgestell, Farbsensor, Gyrosensor, ev3)
+        gyna.AufLinie()

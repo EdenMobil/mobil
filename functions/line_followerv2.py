@@ -5,12 +5,13 @@ from pybricks.parameters import Color
 from pybricks.media.ev3dev import ImageFile, Image
 
 class LineFollower:
-    def __init__(self, route, drivebase, color_sensor, gyro_sensor, ev3):
+    def __init__(self, route, drivebase, color_sensor, gyro_sensor, ev3, ziel):
         self.route = route
         self.drivebase = drivebase
         self.color_sensor = color_sensor
         self.gyro_sensor = gyro_sensor
         self.ev3 = ev3
+        self.ziel = ziel # Zielvariable hinzugefügt
 
         self.event_counter = 0
         self.follow_color = [Color.YELLOW, Color.WHITE]
