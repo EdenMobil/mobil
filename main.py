@@ -9,7 +9,13 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 
 from functions.line_followerv2 import LineFollower
 
+
+# Initialisieren des Bricks
+
 ev3 = EV3Brick()
+
+
+
 
 # Sensors
 color_sensor = ColorSensor(Port.S3)
@@ -21,7 +27,8 @@ left_motor = Motor(Port.C)
 
 Drive = DriveBase(right_motor, left_motor, wheel_diameter=56, axle_track=152)
 
-# Write your program here.
+# Hauptprogramm
+
 ev3.speaker.beep()
 
 gyna = LineFollower([], Drive, color_sensor, gyro_sensor, ev3)
