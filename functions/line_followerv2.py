@@ -1,5 +1,6 @@
 from pybricks.parameters import Color
 from pybricks.media.ev3dev import ImageFile, Image
+from time import sleep
 
 class LineFollower:
     def __init__(self, route, drivebase, color_sensor, gyro_sensor, ev3):
@@ -10,10 +11,10 @@ class LineFollower:
         self.ev3 = ev3
 
         self.event_counter = 0
-        self.follow_color = [Color.YELLOW, Color.WHITE]
+        self.follow_colors = [Color.YELLOW, Color.WHITE]
         self.crossing_color = Color.BLUE
         self.follow_angle = 0
-        self.forward = 150
+        self.forward = 100
         self.retry_value = 0
         self.retry_turn = 15
 
@@ -26,7 +27,7 @@ class LineFollower:
             color = self.color_sensor.color()
             print(angle, color)
 
-            if color in self.follow_color:
+            if color in self.follow_colors:
                 self.ev3.screen.load_image(ImageFile.FORWARD)
                 self.drivebase.straight(self.forward)
                 self.retry_value = 0
@@ -56,20 +57,24 @@ class LineFollower:
             self.drivebase.turn(abs(angle))
 
     def confirm_color(self, color):
-        self.drivebase.turn(5)
-        self.drivebase.turn(-5)
+        self.drivebase.turn(3)
+        self.drivebase.turn(-3)
+        print("Confirming color")
         if self.color_sensor.color() == color:
+            print("Confirmed")
             return True
         else:
+            print("Not confirmed")
             return False
     
     def event(self):
         self.event_counter += 1
 
     def crossing(self):
-        while self.color_sensor == self.crossing_color:
+        while self.color_sensor.color() == self.crossing_color:
             self.drivebase.straight(10)
-        else:
-            if self.color_sensor.color() in self.follow_color:
-                self.drivebase.stop()
-                print("Crossing")
+            print("Searching stop")
+        if self.color_sensor.color() in self.follow_colors:
+            self.drivebase.stop()
+            print("Crossing")
+            sleep(10)
