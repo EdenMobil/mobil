@@ -10,13 +10,18 @@ class LineFollower:
         self.gyro_sensor = gyro_sensor
         self.ev3 = ev3
 
-        self.event_counter = 0
-        self.follow_colors = [Color.YELLOW, Color.WHITE]
+        self.route = route
+        self.follow_colors = [Color.WHITE, Color.YELLOW]
+        self.turn_right_color = Color.GREEN
+        self.turn_left_color = Color.RED
         self.crossing_color = Color.BLUE
-        self.follow_angle = 0
+
         self.forward = 100
+        self.crossing_forward = 50
+        self.follow_angle = 0
         self.retry_value = 0
         self.retry_turn = 15
+        self.event_counter = 0
 
         self.gyro_sensor.reset_angle(0)
         
@@ -35,7 +40,7 @@ class LineFollower:
                 if self.confirm_color(color):
                     self.crossing()
             else:
-                self.ev3.speaker.beep()
+                # self.ev3.speaker.beep()
                 self.correct_direction(angle)
                 
     def correct_direction(self, angle):
@@ -69,6 +74,22 @@ class LineFollower:
     
     def event(self):
         self.event_counter += 1
+        turn_crossing = self.route[0]
+        turn_direction = self.route[1]
+        if self.event_counter == turn_crossing:
+            self.drivebase.straight(self.crossing_forward)
+            if turn_direction == "right":
+                turn = 90
+                self.follow_colors.append(self.turn_right_color)
+                self.follow_colors.remove(self.turn_left_color)
+            elif turn_direction == "left":
+                turn = -90
+                self.follow_colors.append(self.turn_left_color)
+                self.follow_colors.remove(self.turn_right_color)
+            self.drivebase.turn(turn)
+            # make sure the robot is facing the right direction
+            self.drivebase.turn(abs(self.gyro_sensor.angle() - turn))
+            self.gyro_sensor.reset_angle(0)
 
     def crossing(self):
         while self.color_sensor.color() == self.crossing_color:
@@ -77,4 +98,4 @@ class LineFollower:
         if self.color_sensor.color() in self.follow_colors:
             self.drivebase.stop()
             print("Crossing")
-            sleep(10)
+            self.event()
