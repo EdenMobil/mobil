@@ -9,11 +9,9 @@ class LineFollower:
         self.color_sensor = color_sensor
         self.gyro_sensor = gyro_sensor
         self.ev3 = ev3
-
-        self.route = route
+        
         self.follow_colors = [Color.WHITE, Color.YELLOW]
-        self.turn_right_color = Color.GREEN
-        self.turn_left_color = Color.RED
+        self.turn_color = Color.GREEN
         self.crossing_color = Color.BLUE
 
         self.forward = 100
@@ -30,6 +28,7 @@ class LineFollower:
         while True:
             angle = self.gyro_sensor.angle()
             color = self.color_sensor.color()
+            self.ev3.light.on(color)
             print(angle, color)
 
             if color in self.follow_colors:
@@ -40,7 +39,6 @@ class LineFollower:
                 if self.confirm_color(color):
                     self.crossing()
             else:
-                # self.ev3.speaker.beep()
                 self.correct_direction(angle)
                 
     def correct_direction(self, angle):
@@ -80,15 +78,12 @@ class LineFollower:
             self.drivebase.straight(self.crossing_forward)
             if turn_direction == "right":
                 turn = 90
-                self.follow_colors.append(self.turn_right_color)
-                self.follow_colors.remove(self.turn_left_color)
             elif turn_direction == "left":
                 turn = -90
-                self.follow_colors.append(self.turn_left_color)
-                self.follow_colors.remove(self.turn_right_color)
+            self.follow_colors.append(self.turn_color)
             self.drivebase.turn(turn)
             # make sure the robot is facing the right direction
-            self.drivebase.turn(abs(self.gyro_sensor.angle() - turn))
+            self.drivebase.turn(turn - self.gyro_sensor.angle())
             self.gyro_sensor.reset_angle(0)
 
     def crossing(self):
