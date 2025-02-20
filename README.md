@@ -6,9 +6,9 @@ Als Betriebssystem des EV3 wird ev3dev verwendet. Der Programmcode ist in MicroP
 
 ## Testen
 
-Zum Testen emphelen wir aktuell die ev3dev-browser vscode Erweiterung.
+Zum Testen empfehlen wir aktuell die ev3dev-browser vscode Erweiterung.
 
-1. Klone die Repository zu der Maschine auf der vscode insterliert ist.
-2. Öffne die Repository in vscode und stelle sicher da die Erweiterung installiert ist.
+1. Klone die Repository zu der Maschine auf der vscode installiert ist.
+2. Öffne die Repository in vscode und stelle sicher das die Erweiterung installiert ist.
 3. Verbinde dich mit dem EV3 mit Hilfe der Erweiterung.
 4. Drücke F5 um das Programm auf den EV3 laufen zu lassen.
