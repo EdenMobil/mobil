@@ -13,6 +13,7 @@ class LineFollower:
         self.follow_colors = [Color.WHITE, Color.YELLOW]
         self.turn_color = Color.GREEN
         self.crossing_color = Color.BLUE
+        self.stop_color = Color.RED
 
         self.forward = 100
         self.crossing_forward = 50
@@ -23,6 +24,12 @@ class LineFollower:
 
         self.gyro_sensor.reset_angle(0)
         
+        # Validate route format - should be list of tuples [(crossing_number, direction), ...]
+        if not isinstance(route, list):
+            self.route = [route]  # Convert single tuple to list for backward compatibility
+        else:
+            self.route = route
+
     def on_line(self):
         print("Forward")
         while True:
@@ -38,6 +45,10 @@ class LineFollower:
             if color == self.crossing_color:
                 if self.confirm_color(color):
                     self.crossing()
+            if color == self.stop_color:
+                if self.confirm_color(color):
+                    self.stop()
+                    self.switch_driving_direction()
             else:
                 self.correct_direction(angle)
                 
@@ -69,22 +80,13 @@ class LineFollower:
         else:
             print("Not confirmed")
             return False
-    
-    def event(self):
-        self.event_counter += 1
-        turn_crossing = self.route[0]
-        turn_direction = self.route[1]
-        if self.event_counter == turn_crossing:
-            self.drivebase.straight(self.crossing_forward)
-            if turn_direction == "right":
-                turn = 90
-            elif turn_direction == "left":
-                turn = -90
-            self.follow_colors.append(self.turn_color)
-            self.drivebase.turn(turn)
-            # make sure the robot is facing the right direction
-            self.drivebase.turn(turn - self.gyro_sensor.angle())
-            self.gyro_sensor.reset_angle(0)
+
+    def get_turn_for_crossing(self, crossing_number):
+        """Find the turn direction for the current crossing number."""
+        for crossing, direction in self.route:
+            if crossing == crossing_number:
+                return direction
+        return None
 
     def crossing(self):
         while self.color_sensor.color() == self.crossing_color:
@@ -93,4 +95,33 @@ class LineFollower:
         if self.color_sensor.color() in self.follow_colors:
             self.drivebase.stop()
             print("Crossing")
-            self.event()
+            self.event_counter += 1
+            print("Crossing number: " + str(self.event_counter))
+            
+            turn_direction = self.get_turn_for_crossing(self.event_counter)
+            if turn_direction:
+                self.drivebase.straight(self.crossing_forward)
+                if turn_direction == "right":
+                    turn = 90
+                elif turn_direction == "left":
+                    turn = -90
+                self.follow_colors.append(self.turn_color)
+                self.drivebase.turn(turn)
+                # make sure the robot is facing the right direction
+                self.drivebase.turn(turn - self.gyro_sensor.angle())
+                self.gyro_sensor.reset_angle(0)
+
+    def stop(self):
+        print("Stop")
+        self.drivebase.stop()
+        
+        self.drivebase.turn(180)
+        self.drivebase.turn(180 - self.gyro_sensor.angle())
+        self.gyro_sensor.reset_angle(0)
+
+    def switch_driving_direction(self):
+        o_crossing_color = self.crossing_color
+        o_turn_color = self.turn_color
+
+        self.crossing_color = o_turn_color
+        self.turn_color = o_crossing_color
