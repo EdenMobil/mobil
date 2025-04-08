@@ -24,5 +24,11 @@ Drive = DriveBase(right_motor, left_motor, wheel_diameter=56, axle_track=152)
 # Write your program here.
 ev3.speaker.beep()
 
-gyna = LineFollower((1, "right"), Drive, color_sensor, gyro_sensor, ev3)
+# Define route with two right turns: at crossing 1 and crossing 2
+route = [
+    (1, "right"),
+    (2, "right")
+]
+
+gyna = LineFollower(route, Drive, color_sensor, gyro_sensor, ev3)
 gyna.on_line()
