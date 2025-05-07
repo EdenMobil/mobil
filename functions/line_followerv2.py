@@ -42,13 +42,15 @@ class LineFollower:
                 self.ev3.screen.load_image(ImageFile.FORWARD)
                 self.drivebase.straight(self.forward)
                 self.retry_value = 0
-            if color == self.crossing_color:
+            elif color == self.crossing_color:
                 if self.confirm_color(color):
                     self.crossing()
-            if color == self.stop_color:
+            elif color == self.stop_color and self.event_counter == len(self.route):
+                # Stop on red only after the last crossing
                 if self.confirm_color(color):
-                    self.stop()
-                    self.switch_driving_direction()
+                    print("Red detected. End of route. Stopping.")
+                    self.drivebase.stop()
+                    break
             else:
                 self.correct_direction(angle)
                 
@@ -107,7 +109,7 @@ class LineFollower:
                     turn = -90
                 self.follow_colors.append(self.turn_color)
                 self.drivebase.turn(turn)
-                # make sure the robot is facing the right direction
+                # Ensure the robot is facing the correct direction
                 self.drivebase.turn(turn - self.gyro_sensor.angle())
                 self.gyro_sensor.reset_angle(0)
 
