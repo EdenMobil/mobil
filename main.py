@@ -8,6 +8,8 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
 from functions.line_followerv2 import LineFollower
+from functions.mqtt import setup_mqtt
+from time import sleep  # Add this import
 
 ev3 = EV3Brick()
 
@@ -21,14 +23,29 @@ left_motor = Motor(Port.C)
 
 Drive = DriveBase(right_motor, left_motor, wheel_diameter=56, axle_track=152)
 
-# Write your program here.
 ev3.speaker.beep()
 
-# Define route with two right turns: at crossing 1 and crossing 2
-route = [
-    (1, "right"),
-    (2, "right")
-]
+try:
+    client = setup_mqtt()
+except OSError as e:
+    print("MQTT broker setup failed:", e)
+    client = None
 
-gyna = LineFollower(route, Drive, color_sensor, gyro_sensor, ev3)
-gyna.on_line()
+if client:
+    try:
+        while True:
+            client.check_msg()
+            sleep(1)
+    except KeyboardInterrupt:
+        client.disconnect()  # Stop the MQTT listener loop
+        print("Program interrupted.")
+
+# Define a route with multiple crossings and directions
+#route = [
+#    (1, "right"),
+#    (2, "right"),
+#]
+
+# Initialize the LineFollower with the route
+#gyna = LineFollower(route, Drive, color_sensor, gyro_sensor, ev3)
+#gyna.on_line()
